@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
+const API_BASE = "http://localhost:8080";
+
 export default function AuthPage() {
   const navigate = useNavigate();
   const location = useLocation();
@@ -28,7 +30,9 @@ export default function AuthPage() {
     e.preventDefault();
     setError("");
     setSuccess(false);
-    const endpoint = mode === "register" ? "/users/register/" : "/users/login/";
+    const endpoint = mode === "register"
+      ? `${API_BASE}/users/register/`
+      : `${API_BASE}/users/login/`;
     try {
       const res = await fetch(endpoint, {
         method: "POST",
