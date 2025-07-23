@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+const API_BASE = "http://localhost:8080";
+
 export default function LandingPage() {
   const [key, setKey] = useState("");
   const [error, setError] = useState("");
@@ -21,7 +23,7 @@ export default function LandingPage() {
     const jwt = localStorage.getItem("jwt");
     const userId = localStorage.getItem("userId");
     try {
-      const res = await fetch("/fetchKeys/", {
+      const res = await fetch(`${API_BASE}/fetchKeys/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
