@@ -32,7 +32,7 @@ build/
 ### VS Code ###
 .vscode/
 
-.env/dev
+.env.dev
 application-dev.properties
 application-dev.yml 
 application.properties 
