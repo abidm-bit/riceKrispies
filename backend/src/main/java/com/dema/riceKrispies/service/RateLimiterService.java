@@ -9,8 +9,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service
 public class RateLimiterService {
     private static final int REGISTRATION_LIMIT = 5;
-    private static final int LOGIN_LIMIT = 10;
-    private static final int FETCH_KEYS_LIMIT = 5;
+    private static final int LOGIN_LIMIT = 50;
+    private static final int FETCH_KEYS_LIMIT = 50;
     private static final long WINDOW_MILLIS = 24 * 60 * 60 * 1000L;
 
     private final Map<String, RequestCounter> registrationMap = new ConcurrentHashMap<>();

@@ -70,7 +70,7 @@ function App() {
             setMessage(error.response.data || 'Invalid input')
             break
           case 409:
-            setMessage('Email already exists')
+            setMessage('bad request')
             break
           case 429:
             setMessage('Too many requests. Please try again later.')
@@ -127,14 +127,14 @@ function App() {
         <div className="container">
           <div className="form-container">
             <h1>Welcome!</h1>
-            <p>You are successfully logged in.</p>
-            <button onClick={fetchKey} className="submit-btn">
+            <p data-testid="success-login-message">You are successfully logged in.</p>
+            <button data-testid="fetch-key-button" onClick={fetchKey} className="submit-btn">
               Fetch Key
             </button>
-            <button onClick={handleLogout} className="switch-btn">
+            <button data-testid="logout-button" onClick={handleLogout} className="switch-btn">
               Logout
             </button>
-            {message && <div className="message success">{message}</div>}
+            {message && <div data-testid="key-div" className="message success">{message}</div>}
           </div>
         </div>
       </div>
@@ -149,12 +149,14 @@ function App() {
           
           <div className="form-switch">
             <button 
+              data-testid="login-button"
               className={isLogin ? 'active' : ''} 
               onClick={() => { setIsLogin(true); setMessage(''); setFormData({ email: '', password: '' }); }}
             >
               Login
             </button>
             <button 
+              data-testid="signup-button"
               className={!isLogin ? 'active' : ''} 
               onClick={() => { setIsLogin(false); setMessage(''); setFormData({ email: '', password: '' }); }}
             >
@@ -165,6 +167,7 @@ function App() {
           <form onSubmit={handleSubmit}>
             <div className="input-group">
               <input
+                data-testid="email-input"
                 type="email"
                 name="email"
                 placeholder="Email Address"
@@ -176,6 +179,7 @@ function App() {
 
             <div className="input-group">
               <input
+                data-testid="password-input"
                 type="password"
                 name="password"
                 placeholder="Password"
@@ -191,21 +195,21 @@ function App() {
               </div>
             )} */}
 
-            <button type="submit" className="submit-btn" disabled={isLoading}>
+            <button data-testid="submit-button" type="submit" className="submit-btn" disabled={isLoading}>
               {isLoading ? 'Please wait...' : (isLogin ? 'Login' : 'Sign up')}
             </button>
           </form>
 
           <div className="switch-form">
             {isLogin ? (
-              <p>Not a member? <span onClick={() => { setIsLogin(false); setMessage(''); }} className="switch-link">Signup now</span></p>
+              <p>Not a member? <span data-testid="switch-to-signup" onClick={() => { setIsLogin(false); setMessage(''); }} className="switch-link">Signup now</span></p>
             ) : (
-              <p>Already a member? <span onClick={() => { setIsLogin(true); setMessage(''); }} className="switch-link">Login now</span></p>
+              <p>Already a member? <span data-testid="switch-to-login" onClick={() => { setIsLogin(true); setMessage(''); }} className="switch-link">Login now</span></p>
             )}
           </div>
 
           {message && (
-            <div className={`message ${message.includes('successful') || message.includes('Key fetched') ? 'success' : 'error'}`}>
+            <div data-testid="message-div" className={`message ${message.includes('successful') || message.includes('Key fetched') ? 'success' : 'error'}`}>
               {message}
             </div>
           )}

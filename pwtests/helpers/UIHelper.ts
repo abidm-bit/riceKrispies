@@ -13,26 +13,30 @@ messageDiv: Locator;
 switchToLoginLink: Locator;  
 switchToSignupLink: Locator;
 pageTitle: Locator;
+successLoginMessage: Locator;
+keyDiv: Locator;
 
   constructor(page: Page) {
     this.page = page;
     
     // Form inputs
-    this.emailInput = page.locator('input[name="email"]');
-    this.passwordInput = page.locator('input[name="password"]');
+    this.emailInput = page.locator('[data-testid="email-input"]');
+    this.passwordInput = page.locator('[data-testid="password-input"]');
     
     // Buttons
-    this.submitButton = page.locator('button[type="submit"]');
-    this.loginButton = page.locator('.form-switch button').first();
-    this.signupButton = page.locator('.form-switch button').last();
-    this.logoutButton = page.locator('button:has-text("Logout")');
-    this.fetchKeyButton = page.locator('button:has-text("Fetch Key")');
+    this.submitButton = page.locator('[data-testid="submit-button"]');
+    this.loginButton = page.locator('[data-testid="login-button"]');
+    this.signupButton = page.locator('[data-testid="signup-button"]');
+    this.logoutButton = page.locator('[data-testid="logout-button"]');
+    this.fetchKeyButton = page.locator('[data-testid="fetch-key-button"]');
     
     // Messages and text
-    this.messageDiv = page.locator('.message');
-    this.switchToLoginLink = page.locator('.switch-link:has-text("Login now")');
-    this.switchToSignupLink = page.locator('.switch-link:has-text("Signup now")');
+    this.messageDiv = page.locator('[data-testid="message-div"]');
+    this.switchToLoginLink = page.locator('[data-testid="switch-to-login"]');
+    this.switchToSignupLink = page.locator('[data-testid="switch-to-signup"]');
     this.pageTitle = page.locator('h1');
+    this.successLoginMessage = page.locator('[data-testid="success-login-message"]');
+    this.keyDiv = page.locator('[data-testid="key-div"]');
   }
 
   async navigateToApp(baseUrl: string = 'http://localhost:5173') {
@@ -94,6 +98,15 @@ pageTitle: Locator;
     }
   }
 
+  async isSuccessLoginMessageVisible(): Promise<boolean> {
+    try {
+      await this.successLoginMessage.waitFor({ timeout: 5000 });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
   async waitForMessage(expectedText?: string, timeout: number = 5000) {
     if (expectedText) {
       await this.page.waitForFunction(
@@ -141,7 +154,7 @@ pageTitle: Locator;
     return await this.passwordInput.evaluate(el => el === document.activeElement);
   }
 
-  // Advanced interactions
+
   async loginAndWaitForSuccess(email: string, password: string) {
     await this.performLogin(email, password);
     await this.waitForMessage('Login successful');
@@ -160,7 +173,7 @@ pageTitle: Locator;
     return keyMatch ? keyMatch[1] : '';
   }
 
-  // Helper method to submit form bypassing HTML5 validation
+
   async submitFormWithoutValidation() {
     await this.page.evaluate(() => {
       const form = document.querySelector('form');
