@@ -108,6 +108,17 @@ export class APIHelper {
     }
     return responses;
   }
+/**
+ * Helper method to make multiple registration requests to trigger rate limiting
+ */
+  async makeMultipleRegistrationRequests(email: string, password: string, count: number): Promise<APIResponse[]> {
+    const responses: APIResponse[] = [];
+    for (let i = 0; i < count; i++) {
+      const response = await this.registerUser(email, password);
+      responses.push(response);
+    }
+    return responses;
+  }
 
   /**
    * Helper method to make fetch key request (requires authentication)
@@ -118,5 +129,17 @@ export class APIHelper {
         'Authorization': `Bearer ${token}`
       }
     });
+  }
+
+  /**
+   * Helper method to make multiple fetch key requests to trigger rate limiting
+   */
+  async makeMultipleFetchKeyRequests(token: string, count: number): Promise<APIResponse[]> {
+    const responses: APIResponse[] = [];
+    for (let i = 0; i < count; i++) {
+      const response = await this.fetchKey(token);
+      responses.push(response);
+    }
+    return responses;
   }
 } 

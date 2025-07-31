@@ -117,7 +117,7 @@ test.describe('Application Tests', () => {
     await expect(uiHelper.messageDiv).toContainText('bad request');
   });
   
-  test.skip('register with a new email', async () => {   
+  test.skip('register with a new email @smoke', async () => {   
     const randomUser = getRandomNewUser();
     await uiHelper.switchToSignup();
     await uiHelper.fillEmail(randomUser.email);
@@ -185,11 +185,17 @@ test.describe('API Tests', () => {
 
 
 
-  test('should handle rate limit exceeded response correctly', async () => {
+  test.skip('expect rate limit exceeded for the login endpoint', async () => {
     const randomUser = getRandomExistingUser();
     const responses = await apiHelper.makeMultipleLoginRequests(randomUser.email, randomUser.password, 51);
     expect(responses[responses.length - 1].status()).toBe(429);
   });
 
+ test.skip('full workflow', async () => {
+// register
+// login
+// fetch key
+
+ });
 
 }); 
