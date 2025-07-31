@@ -166,6 +166,7 @@ test.describe('Application Tests', () => {
    await expect(uiHelper.keyDiv).toContainText('Login successful!');   
    await expect(uiHelper.successLoginMessage).toBeVisible();
    await uiHelper.fetchKeyButton.click();
+
    await expect(uiHelper.keyDiv).toBeVisible();
    await expect(uiHelper.keyDiv).toContainText('Key fetched');
   });

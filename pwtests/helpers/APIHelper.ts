@@ -1,4 +1,4 @@
-import { APIRequestContext, APIResponse, expect } from '@playwright/test';
+import { APIRequestContext, APIResponse, expect, Page } from '@playwright/test';
 
 export class APIHelper {
   private request: APIRequestContext;
@@ -71,6 +71,139 @@ export class APIHelper {
     const responseBody = await response.json();
     expect(responseBody).toHaveProperty('userId');
     expect(responseBody).toHaveProperty('token');
+  }
+
+  // Network Intercept Methods
+
+  /**
+   * Intercept registration requests to return invalid registration response (400)
+   */
+  async interceptInvalidRegistration(page: Page) {
+    await page.route(`${this.baseUrl}/users/register/`, (route) => {
+      route.fulfill({
+        status: 400,
+        contentType: 'text/plain',
+        body: 'invalid registration'
+      });
+    });
+  }
+
+  /**
+   * Intercept login requests to return wrong credentials response (400)
+   */
+  async interceptWrongCredentials(page: Page) {
+    await page.route(`${this.baseUrl}/users/login/`, (route) => {
+      route.fulfill({
+        status: 400,
+        contentType: 'text/plain',
+        body: 'wrong credentials'
+      });
+    });
+  }
+
+  /**
+   * Intercept requests to return rate limit exceeded response (429)
+   * Can be used for any endpoint
+   */
+  async interceptRateLimitExceeded(page: Page, endpoint: 'login' | 'register' | 'fetchKey') {
+    const endpoints = {
+      login: `${this.baseUrl}/users/login/`,
+      register: `${this.baseUrl}/users/register/`,
+      fetchKey: `${this.baseUrl}/keys/fetch/`
+    };
+    
+    await page.route(endpoints[endpoint], (route) => {
+      route.fulfill({
+        status: 429,
+        contentType: 'text/plain',
+        body: 'rate limit exceeded'
+      });
+    });
+  }
+
+  /**
+   * Intercept registration requests to return duplicate email response (409)
+   */
+  async interceptDuplicateEmail(page: Page) {
+    await page.route(`${this.baseUrl}/users/register/`, (route) => {
+      route.fulfill({
+        status: 409,
+        contentType: 'text/plain',
+        body: 'bad request'
+      });
+    });
+  }
+
+  /**
+   * Intercept requests to return internal server error response (500)
+   * Can be used for any endpoint
+   */
+  async interceptInternalServerError(page: Page, endpoint: 'login' | 'register' | 'fetchKey') {
+    const endpoints = {
+      login: `${this.baseUrl}/users/login/`,
+      register: `${this.baseUrl}/users/register/`,
+      fetchKey: `${this.baseUrl}/keys/fetch/`
+    };
+    
+    await page.route(endpoints[endpoint], (route) => {
+      route.fulfill({
+        status: 500,
+        contentType: 'text/plain',
+        body: 'internal server error'
+      });
+    });
+  }
+
+  /**
+   * Intercept registration requests to return successful registration response (201)
+   */
+  async interceptSuccessfulRegistration(page: Page) {
+    await page.route(`${this.baseUrl}/users/register/`, (route) => {
+      route.fulfill({
+        status: 201,
+        contentType: 'text/plain',
+        body: 'Account created'
+      });
+    });
+  }
+
+  /**
+   * Intercept login requests to return successful login response (200)
+   */
+  async interceptSuccessfulLogin(page: Page, mockUserId: number = 1, mockToken: string = 'mock-jwt-token') {
+    await page.route(`${this.baseUrl}/users/login/`, (route) => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+          userId: mockUserId,
+          token: mockToken
+        })
+      });
+    });
+  }
+
+  /**
+   * Intercept fetch key requests to return successful response (200)
+   */
+  async interceptSuccessfulFetchKey(page: Page) {
+    await page.route(`${this.baseUrl}/keys/fetch/`, (route) => {
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({
+        })
+      });
+    });
+  }
+
+  /**
+   * Clear all route intercepts for a page
+   */
+  async clearAllIntercepts(page: Page) {
+    await page.unroute(`${this.baseUrl}/users/register/`);
+    await page.unroute(`${this.baseUrl}/users/login/`);
+    await page.unroute(`${this.baseUrl}/keys/fetch/`);
   }
 
   /**
