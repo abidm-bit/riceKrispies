@@ -73,7 +73,7 @@ test.describe('Application Tests', () => {
 
 
 
-  test('should switch between login and signup forms @smoke', async () => {
+  test('should switch between login and signup forms @smoke @regression', async () => {
     await expect(uiHelper.loginButton).toHaveClass(/active/);
     await uiHelper.switchToSignup();
     await expect(uiHelper.signupButton).toHaveClass(/active/);
@@ -83,7 +83,7 @@ test.describe('Application Tests', () => {
     await expect(uiHelper.submitButton).toHaveText('Login');
   });
 
-  test('password is required', async () => {
+  test('password is required @regression', async () => {
     await uiHelper.fillEmail('test@example.com');
     await uiHelper.submitFormWithoutValidation();
     await uiHelper.waitForMessage('Please fill in all fields');
@@ -91,7 +91,7 @@ test.describe('Application Tests', () => {
     await expect(uiHelper.messageDiv).toContainText('Please fill in all fields');
   });
 
-  test('email is required', async () => {
+  test('email is required @regression', async () => {
     await uiHelper.fillPassword('testpassword123');
     await uiHelper.submitFormWithoutValidation();
     await uiHelper.waitForMessage('Please fill in all fields');
@@ -99,7 +99,7 @@ test.describe('Application Tests', () => {
     await expect(uiHelper.messageDiv).toContainText('Please fill in all fields');
   });
 
-  test('password must be at least 8 characters', async () => {
+  test('password must be at least 8 characters @regression', async () => {
     await uiHelper.switchToSignup();
     await uiHelper.fillEmail('test@example.com');
     await uiHelper.fillPassword('weak');
@@ -108,7 +108,7 @@ test.describe('Application Tests', () => {
     await expect(uiHelper.messageDiv).toContainText('Password must be at least 8 characters');
   });
 
-  test.skip('register with an existing email', async () => {
+  test.skip('register with an existing email @regression', async () => {
     const randomUser = getRandomExistingUser();
     await uiHelper.switchToSignup();
     await uiHelper.fillEmail(randomUser.email);
@@ -117,7 +117,7 @@ test.describe('Application Tests', () => {
     await expect(uiHelper.messageDiv).toContainText('bad request');
   });
   
-  test.skip('register with a new email @smoke', async () => {   
+  test.skip('register with a new email @smoke @regression', async () => {   
     const randomUser = getRandomNewUser();
     await uiHelper.switchToSignup();
     await uiHelper.fillEmail(randomUser.email);
@@ -127,7 +127,7 @@ test.describe('Application Tests', () => {
     addUserToExistingUsers(randomUser.email, randomUser.password);
   });
   
-  test('login with valid credentials @smoke', async () => {
+  test('login with valid credentials @smoke @regression', async () => {
     const randomUser = getRandomExistingUser();
     await uiHelper.switchToLogin();
     await uiHelper.fillEmail(randomUser.email);
@@ -139,7 +139,7 @@ test.describe('Application Tests', () => {
     await expect(uiHelper.fetchKeyButton).toBeVisible();
   });
 
-  test('login with wrong password', async () => {
+  test('login with wrong password @regression', async () => {
     const randomUser = getRandomExistingUser();
     await uiHelper.switchToLogin();
     await uiHelper.fillEmail(randomUser.email);
@@ -148,7 +148,7 @@ test.describe('Application Tests', () => {
     await expect(uiHelper.messageDiv).toContainText('wrong credentials');
   });
 
-  test('login with wrong email', async () => {
+  test('login with wrong email @regression', async () => {
     const randomUser = getRandomExistingUser();
     await uiHelper.switchToLogin();
     await uiHelper.fillEmail('invalidemail@example.com');
@@ -157,7 +157,7 @@ test.describe('Application Tests', () => {
     await expect(uiHelper.messageDiv).toContainText('wrong credentials');
   });
 
-  test('login & fetch key @smoke', async () => {
+  test('login & fetch key @smoke @regression', async () => {
    const randomUser = getRandomExistingUser();
    await uiHelper.switchToLogin();
    await uiHelper.fillEmail(randomUser.email);
@@ -191,7 +191,7 @@ test.describe('API Tests', () => {
     expect(responses[responses.length - 1].status()).toBe(429);
   });
 
- test.skip('full workflow', async () => {
+ test.skip('full workflow @smoke @regression', async () => {
 // register
 // login
 // fetch key
