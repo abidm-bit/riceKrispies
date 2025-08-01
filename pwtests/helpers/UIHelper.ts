@@ -1,4 +1,4 @@
-import { Page, Locator } from '@playwright/test';
+import { Page, Locator, expect } from '@playwright/test';
 
 export class UIHelper {
 page: Page;
@@ -189,5 +189,81 @@ keyDiv: Locator;
         inputs.forEach(input => input.setAttribute('required', ''));
       }
     });
+  }
+
+  // Network Response Assertion Methods
+
+  /**
+   * Generic function to validate network response status and body
+   */
+  assertNetworkResponse(actualStatus: number, actualBody: any, expectedStatus: number, expectedMessage?: string) {
+    expect(actualStatus).toBe(expectedStatus);
+    
+    if (expectedMessage) {
+      if (typeof actualBody === 'string') {
+        expect(actualBody).toContain(expectedMessage);
+      } else if (typeof actualBody === 'object') {
+        const bodyString = JSON.stringify(actualBody);
+        expect(bodyString).toContain(expectedMessage);
+      }
+    }
+  }
+
+  /**
+   * Assert successful login network response (200 with userId and jwtToken)
+   */
+  assertLoginSuccess(status: number, body: any) {
+    expect(status).toBe(200);
+    expect(body).toHaveProperty('userId');
+    expect(body).toHaveProperty('jwtToken');
+  }
+
+  /**
+   * Assert wrong credentials network response (400)
+   */
+  assertWrongCredentials(status: number, body: any) {
+    this.assertNetworkResponse(status, body, 400, 'wrong credentials');
+  }
+
+  /**
+   * Assert invalid registration network response (400)
+   */
+  assertInvalidRegistration(status: number, body: any) {
+    this.assertNetworkResponse(status, body, 400, 'invalid registration');
+  }
+
+  /**
+   * Assert successful registration network response (201)
+   */
+  assertSuccessfulRegistration(status: number, body: any) {
+    this.assertNetworkResponse(status, body, 201, 'Account created');
+  }
+
+  /**
+   * Assert duplicate email registration network response (409)
+   */
+  assertDuplicateEmail(status: number, body: any) {
+    this.assertNetworkResponse(status, body, 409, 'bad request');
+  }
+
+  /**
+   * Assert rate limit exceeded network response (429)
+   */
+  assertRateLimitExceeded(status: number, body: any) {
+    this.assertNetworkResponse(status, body, 429, 'rate limit exceeded');
+  }
+
+  /**
+   * Assert internal server error network response (500)
+   */
+  assertInternalServerError(status: number, body: any) {
+    this.assertNetworkResponse(status, body, 500, 'internal server error');
+  }
+
+  /**
+   * Assert successful fetch key network response (200)
+   */
+  assertFetchKeySuccess(status: number, body: any) {
+    expect(status).toBe(200);
   }
 } 

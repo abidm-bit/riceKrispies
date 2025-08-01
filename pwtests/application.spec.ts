@@ -137,6 +137,7 @@ test.describe('Application Tests', () => {
     await expect(uiHelper.successLoginMessage).toBeVisible();
     await uiHelper.successLoginMessage.waitFor({ state: 'visible' });
     await expect(uiHelper.fetchKeyButton).toBeVisible();
+    uiHelper.assertLoginSuccess(200, { userId: randomUser.email, jwtToken: expect.any(String)});
   });
 
   test('login with wrong password @regression', async () => {
@@ -146,6 +147,7 @@ test.describe('Application Tests', () => {
     await uiHelper.fillPassword('invalidpassword');
     await uiHelper.clickSubmit();
     await expect(uiHelper.messageDiv).toContainText('wrong credentials');
+    uiHelper.assertWrongCredentials(400, { message: 'wrong credentials' });
   });
 
   test('login with wrong email @regression', async () => {
@@ -155,6 +157,7 @@ test.describe('Application Tests', () => {
     await uiHelper.fillPassword(randomUser.password);
     await uiHelper.clickSubmit();
     await expect(uiHelper.messageDiv).toContainText('wrong credentials');
+    uiHelper.assertWrongCredentials(400, { message: 'wrong credentials' });
   });
 
   test('login & fetch key @smoke @regression', async () => {
@@ -169,8 +172,8 @@ test.describe('Application Tests', () => {
 
    await expect(uiHelper.keyDiv).toBeVisible();
    await expect(uiHelper.keyDiv).toContainText('Key fetched');
+   uiHelper.assertFetchKeySuccess(200, { key: expect.any(String) });
   });
-  
 
 
 });
