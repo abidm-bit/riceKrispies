@@ -63,7 +63,7 @@ function addUserToExistingUsers(email: string, password: string) {
   }
 }
 
-test.describe.skip('Application Tests', () => {
+test.describe('Application Tests', () => {
   let uiHelper: UIHelper;
 
   test.beforeEach(async ({ page }) => {
@@ -187,15 +187,7 @@ test.describe('API Tests', () => {
     apiHelper = new APIHelper(request);
   });
 
-
-
-  test.skip('expect rate limit exceeded for the login endpoint', async () => {
-    const randomUser = getRandomExistingUser();
-    const responses = await apiHelper.makeMultipleLoginRequests(randomUser.email, randomUser.password, 51);
-    expect(responses[responses.length - 1].status()).toBe(429);
-  });
-
- test.only('full workflow @smoke @regression', async () => {
+  test('full workflow @smoke @regression', async () => {
     // Generate a unique test user
     const timestamp = Date.now();
     const testUser = {
@@ -251,5 +243,13 @@ test.describe('API Tests', () => {
     console.log(`User ID from fetch key: ${fetchKeyBody.userId}`);
     console.log(`Verified user ID matches between login and fetch key: ${fetchKeyBody.userId === userIdFromLogin}`);
  });
+
+  test('expect rate limit exceeded for the login endpoint', async () => {
+    const randomUser = getRandomExistingUser();
+    const responses = await apiHelper.makeMultipleLoginRequests(randomUser.email, randomUser.password, 51);
+    expect(responses[responses.length - 1].status()).toBe(429);
+  });
+
+ 
 
 }); 
