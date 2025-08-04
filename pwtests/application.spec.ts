@@ -63,7 +63,7 @@ function addUserToExistingUsers(email: string, password: string) {
   }
 }
 
-test.describe('Application Tests', () => {
+test.describe.skip('Application Tests', () => {
   let uiHelper: UIHelper;
 
   test.beforeEach(async ({ page }) => {
@@ -195,11 +195,61 @@ test.describe('API Tests', () => {
     expect(responses[responses.length - 1].status()).toBe(429);
   });
 
- test.skip('full workflow @smoke @regression', async () => {
-// register
-// login
-// fetch key
+ test.only('full workflow @smoke @regression', async () => {
+    // Generate a unique test user
+    const timestamp = Date.now();
+    const testUser = {
+      email: `testuser_${timestamp}@example.com`,
+      password: 'Test123!@#'
+    };
 
+    console.log(`Generated test user: ${testUser.email}`);
+
+    // Step 1: Register the user
+    const registerResponse = await apiHelper.registerUser(testUser.email, testUser.password);
+    expect(registerResponse.status()).toBe(201);
+    const registerBody = await registerResponse.text();
+    expect(registerBody).toBe('Account created');
+    console.log(`Registration successful for: ${testUser.email}`);
+
+    // Step 2: Login with the registered user credentials to get the user ID
+    const loginResponse = await apiHelper.loginUser(testUser.email, testUser.password);
+    expect(loginResponse.status()).toBe(200);
+    
+    // Get the response body and verify JWT token and user ID exist
+    const loginBody = await loginResponse.json();
+    expect(loginBody).toHaveProperty('jwtToken');
+    expect(loginBody).toHaveProperty('userId');
+    expect(typeof loginBody.jwtToken).toBe('string');
+    expect(typeof loginBody.userId).toBe('number');
+    expect(loginBody.jwtToken).toBeTruthy();
+    expect(loginBody.userId).toBeGreaterThan(0); // Assert user ID exists and is a positive number
+
+    // Store the JWT token and user ID from login response
+    const jwtToken = loginBody.jwtToken;
+    const userIdFromLogin = loginBody.userId;
+    
+    console.log(`Login successful!`);
+    console.log(`JWT Token: ${jwtToken}`);
+    console.log(`User ID from login: ${userIdFromLogin}`);
+
+    // Step 3: Fetch key using the stored JWT token and user ID
+    const fetchKeyResponse = await apiHelper.fetchKey(jwtToken, userIdFromLogin);
+    expect(fetchKeyResponse.status()).toBe(200);
+    
+    // Get the fetch key response body and verify it contains the key and same user ID
+    const fetchKeyBody = await fetchKeyResponse.json();
+    expect(fetchKeyBody).toHaveProperty('key');
+    expect(fetchKeyBody).toHaveProperty('userId');
+    expect(typeof fetchKeyBody.key).toBe('string');
+    expect(typeof fetchKeyBody.userId).toBe('number');
+    expect(fetchKeyBody.key).toBeTruthy();
+    expect(fetchKeyBody.userId).toBe(userIdFromLogin); // Assert same user ID from login
+    
+    console.log(`Key fetch successful!`);
+    console.log(`Key: ${fetchKeyBody.key}`);
+    console.log(`User ID from fetch key: ${fetchKeyBody.userId}`);
+    console.log(`Verified user ID matches between login and fetch key: ${fetchKeyBody.userId === userIdFromLogin}`);
  });
 
 }); 

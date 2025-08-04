@@ -123,10 +123,13 @@ export class APIHelper {
   /**
    * Helper method to make fetch key request (requires authentication)
    */
-  async fetchKey(token: string): Promise<APIResponse> {
-    return await this.request.get(`${this.baseUrl}/keys/fetch/`, {
+  async fetchKey(token: string, userId: number): Promise<APIResponse> {
+    return await this.request.post(`${this.baseUrl}/fetchKeys/`, {
       headers: {
         'Authorization': `Bearer ${token}`
+      },
+      data: {
+        userId: userId
       }
     });
   }
@@ -134,10 +137,10 @@ export class APIHelper {
   /**
    * Helper method to make multiple fetch key requests to trigger rate limiting
    */
-  async makeMultipleFetchKeyRequests(token: string, count: number): Promise<APIResponse[]> {
+  async makeMultipleFetchKeyRequests(token: string, userId: number, count: number): Promise<APIResponse[]> {
     const responses: APIResponse[] = [];
     for (let i = 0; i < count; i++) {
-      const response = await this.fetchKey(token);
+      const response = await this.fetchKey(token, userId);
       responses.push(response);
     }
     return responses;
