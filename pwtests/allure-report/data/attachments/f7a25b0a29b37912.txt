@@ -1,0 +1,9 @@
+Generated test user: testuser_1754274586695@example.com
+Registration successful for: testuser_1754274586695@example.com
+Login successful!
+JWT Token: eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjMwLCJlbWFpbCI6InRlc3R1c2VyXzE3NTQyNzQ1ODY2OTVAZXhhbXBsZS5jb20iLCJpYXQiOjE3NTQyNzQ1ODYsImV4cCI6MTc1NDM2MDk4Nn0.STuP1q0to2lsBfL4fnel2EJNd9GHfP3K64JKUB6rZ1Y
+User ID from login: 30
+Key fetch successful!
+Key: 64WF5-I5PQO-JKPU0-UE0TD-4IO0W
+User ID from fetch key: 30
+Verified user ID matches between login and fetch key: true

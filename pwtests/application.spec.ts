@@ -73,7 +73,7 @@ test.describe('Application Tests', () => {
 
 
 
-  test('should switch between login and signup forms @smoke @regression', async () => {
+  test('switch btwn login and signup forms @smoke @regression', async () => {
     await expect(uiHelper.loginButton).toHaveClass(/active/);
     await uiHelper.switchToSignup();
     await expect(uiHelper.signupButton).toHaveClass(/active/);
@@ -108,7 +108,7 @@ test.describe('Application Tests', () => {
     await expect(uiHelper.messageDiv).toContainText('Password must be at least 8 characters');
   });
 
-  test.skip('register with an existing email @regression', async () => {
+  test('register with an existing email @regression', async () => {
     const randomUser = getRandomExistingUser();
     await uiHelper.switchToSignup();
     await uiHelper.fillEmail(randomUser.email);
@@ -117,7 +117,7 @@ test.describe('Application Tests', () => {
     await expect(uiHelper.messageDiv).toContainText('bad request');
   });
   
-  test.skip('register with a new email @smoke @regression', async () => {   
+  test('register with a new email @smoke @regression', async () => {   
     const randomUser = getRandomNewUser();
     await uiHelper.switchToSignup();
     await uiHelper.fillEmail(randomUser.email);
@@ -244,7 +244,9 @@ test.describe('API Tests', () => {
     console.log(`Verified user ID matches between login and fetch key: ${fetchKeyBody.userId === userIdFromLogin}`);
  });
 
-  test('expect rate limit exceeded for the login endpoint', async () => {
+  test.skip('expect rate limit exceeded for the login endpoint @destructive', async () => {
+    // WARNING: This test will block the API for 24 hours - only run manually
+    // also running all other tests at once blocks the API bc of the rate limit
     const randomUser = getRandomExistingUser();
     const responses = await apiHelper.makeMultipleLoginRequests(randomUser.email, randomUser.password, 51);
     expect(responses[responses.length - 1].status()).toBe(429);
