@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:57162/giveawayDBdev
+    username: MiltonHershey
+    password: HighFructoseCornSyrup5!
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop  # Recreate schema for each test run
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+jwt:
+  secret: zAHi9DlQ+Vlo2opwSOhvRXP7WS6wTB/VjBK4aGeTZik=
+cors:
+  allowed-origins:
+    - "http://localhost:5173"
+    - "http://localhost:8080"
+logging:
+  level:
+    com.dema.riceKrispies: DEBUG
+    org.springframework.web: DEBUG
